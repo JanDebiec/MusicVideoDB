@@ -12,14 +12,21 @@ class DbBase(db.Model):
                                            onupdate=db.func.current_timestamp())
 
 
-class Person(DbBase):
+shows = db.Table('shows',
+     db.Column('performer_id', db.Integer, db.ForeignKey('performer.id'), primary_key=True),
+     db.Column('show_id', db.Integer, db.ForeignKey('show.id'), primary_key=True)
+                 )
+
+class Performer(DbBase):
+    ''' could be person or group'''
     name = db.Column(db.String(64))
     # relations
-    shows = db.relationship('Show', backref='performer', lazy='dynamic')
+    shows = db.relationship('Show', secondary=shows, backref='performer', lazy='dynamic')
 
 
 class Show(DbBase):
-    name = db.Column(db.String(64))
+    ''' could be film, or concert'''
+    title = db.Column(db.String(64))
     place = db.Column(db.String(64))
     showdate = db.Column(db.DateTime)
     publishyear = db.Column(db.String(4))
@@ -27,3 +34,18 @@ class Show(DbBase):
     source = db.Column(db.String(8))
     place = db.Column(db.String(8))
     lengthinmin = db.Column(db.Integer)
+    performers = db.relationship('Performer', secondary=shows, backref='show', lazy='dynamic')
+
+
+# tags = db.Table('tags',
+#     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+#     db.Column('page_id', db.Integer, db.ForeignKey('page.id'), primary_key=True)
+# )
+
+# class Page(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     tags = db.relationship('Tag', secondary=tags, lazy='subquery',
+#         backref=db.backref('pages', lazy=True))
+#
+# class Tag(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
