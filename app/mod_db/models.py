@@ -28,7 +28,7 @@ class Performer(DbBase):
 class Show(DbBase):
     ''' could be film, or concert'''
     performers = db.relationship('Performer', secondary=shows, backref='show', lazy='dynamic')
-    city = db.Column(db.String(64))
+    location = db.Column(db.String(64))
     showdate = db.Column(db.String(12))
     title = db.Column(db.String(64))
     publishyear = db.Column(db.String(4))

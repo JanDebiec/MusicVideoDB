@@ -115,7 +115,7 @@ def readFileAddItemsToDb(fileName):
                     #     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
 
                     print(name, title, medium, count, number)
-                    show = Show(title=title, city=city, showdate=showdate,
+                    show = Show(title=title, location=city, showdate=showdate,
                                 medium=medium, source=source,
                                 number = number
                                 )
