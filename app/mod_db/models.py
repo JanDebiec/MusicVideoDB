@@ -19,6 +19,7 @@ shows = db.Table('shows',
 
 class Performer(DbBase):
     ''' could be person or group'''
+    firstname = db.Column(db.String(64))
     name = db.Column(db.String(64))
     # relations
     shows = db.relationship('Show', secondary=shows, backref='performer', lazy='dynamic')
@@ -26,15 +27,16 @@ class Performer(DbBase):
 
 class Show(DbBase):
     ''' could be film, or concert'''
-    title = db.Column(db.String(64))
-    place = db.Column(db.String(64))
-    showdate = db.Column(db.DateTime)
-    publishyear = db.Column(db.String(4))
-    medium = db.Column(db.String(8))
-    source = db.Column(db.String(8))
-    place = db.Column(db.String(8))
-    lengthinmin = db.Column(db.Integer)
     performers = db.relationship('Performer', secondary=shows, backref='show', lazy='dynamic')
+    city = db.Column(db.String(64))
+    showdate = db.Column(db.String(12))
+    title = db.Column(db.String(64))
+    publishyear = db.Column(db.String(4))
+    source = db.Column(db.String(8))
+    medium = db.Column(db.String(8))
+    lengthinmin = db.Column(db.Integer)
+    number = db.Column(db.String(8))
+    place = db.Column(db.String(8))
 
 
 # tags = db.Table('tags',

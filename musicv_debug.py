@@ -9,3 +9,4 @@ app = create_app()
 def make_shell_context():
     return {'db': db , 'Show':Show, 'Performer':Performer}
 
+app.run(debug=True)

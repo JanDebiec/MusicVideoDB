@@ -96,6 +96,8 @@ class TestAppDb:
         assert m != None
         s = m.shows.all()
         print(type(s))
+
+        # should be 2 shows, Paris and Wwa
         count = len(s)
         assert count == 2
 
