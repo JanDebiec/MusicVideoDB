@@ -100,72 +100,70 @@ def searchInDb(searchitems):
 #     print(obj)
 #     db.session.delete(obj)
 #     db.session.commit()
+def updateShow(showid, form):
+    commitFlag = False
 
-# def updateMovie(movieid, form):
-#     '''
-#     movie without imdbId can get imdbId,
-#     rest can get new medium (bought dvd) or user rating
-#     :param movieid: db id
-#     :param form: UpdateMovieForm to extract input data
-#     '''
-#     obj = Movie.query.filter_by(id=movieid).first()
-#     imdbId = form.imdbid.data
-#
-#     amgRatingNew = form.ratingAmg.data
-#     amg = Critic.query.filter_by(name='AMG').first()
-#     updateRating(obj, amg, amgRatingNew)
-#
-#     ownRatingNew = form.ownrating.data
-#     jd = Critic.query.filter_by(name='JD').first()
-#     updateRating(obj, jd, ownRatingNew)
-#
-#     oldTitle = obj.titleLocal
-#     newTitle = form.localname.data
-#     if newTitle != oldTitle:
-#         obj.titleLocal = newTitle
-#
-#     oldMedium = obj.medium
-#     newMedium = form.medium.data
-#     if newMedium != oldMedium:
-#         obj.medium = newMedium
-#
-#     newplace = form.place.data
-#     oldplace = obj.place
-#     if newplace != oldplace:
-#         obj.place = newplace
-#
-#     oldImdb = obj.imdbId
-#     if oldImdb == '' or oldImdb == '0000000':
-#         if imdbId != '' and imdbId != '0000000':
-#             updateMovieWithoutIDWithImdb(obj, imdbId, commit=False)
-#     db.session.commit()
+    obj = Show.query.filter_by(id=showid).first()
 
-# def updateRating(movie, critic, newRating):
-#
-#     ratingOldObj = getRatingForMovie(movie, critic)
-#     if ratingOldObj != None:
-#         ownRatingOld = ratingOldObj.value
-#     else:
-#         ownRatingOld = None
-#     if(newRating != ownRatingOld) and (newRating != ''):
-#         if(ratingOldObj == None):
-#             newRating = Rating(movie_id=movie.id, critic_id=critic.id, value=newRating)
-#             db.session.add(newRating)
-#         else:
-#             ratingOldObj.value = newRating
+    oldTitle = obj.title
+    newTitle = form.title.data
+    if newTitle != oldTitle:
+        commitFlag = True
+        obj.title = newTitle
 
+    newlocation = form.location.data
+    oldlocation = obj.location
+    if newlocation != oldlocation:
+        commitFlag = True
+        obj.location = newlocation
 
-# def updateCritic(criticid, form):
-#     obj = Critic.query.filter_by(id=criticid).first()
-#     name = form.name.data
-#     url = form.url.data
-#     maxVal = form.maxval.data
-#     obj.name = name
-#     obj.url = url
-#     obj.maxVal = maxVal
-#     db.session.commit()
+    oldyear = obj.showdate
+    newyear = form.year.data
+    if newyear != oldyear:
+        commitFlag = True
+        obj.showdate = newyear
 
+    oldMedium = obj.medium
+    newMedium = form.medium.data
+    if newMedium != oldMedium:
+        commitFlag = True
+        obj.medium = newMedium
 
+    newplace = form.place.data
+    oldplace = obj.place
+    if newplace != oldplace:
+        commitFlag = True
+        obj.place = newplace
+
+    newnotes = form.notes.data
+    oldnotes = obj.notes
+    if newnotes != oldnotes:
+        commitFlag = True
+        obj.notes = newnotes
+
+    # check if new performer added
+    newName = form.addperformername.data
+    if newName != '':
+        newFName = form.addperformerfname.data
+        # check if performer already exists
+        perf = Performer.query.filter_by(name=newName).filter_by(firstname=newFName).first()
+        if perf == None:
+            perf = Performer(name=newName, firstname=newFName)
+        # TODO check if performer already allocated to show
+        newperfid = perf.id
+        flagPerfAllocated = False
+        performers = obj.performer
+        for oldPerf in performers:
+            oldId = oldPerf.id
+            if oldId == newperfid:
+                flagPerfAllocated = True
+
+        if flagPerfAllocated == False:
+            obj.performers.append(perf)
+            commitFlag = True
+
+    if commitFlag == True:
+        db.session.commit()
 
 
 def updateMediumInDb(foundList, inputMedium):

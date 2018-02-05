@@ -40,15 +40,20 @@ def search():
                             form=form,
                             message=foundMessage)
 
-# @mod_db.route('/edit', methods=['GET', 'POST'])
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
-# def edit():
 def edit(showid):
     form = EditShowForm()
     foundMessage = 'edit'
+    if form.validate_on_submit():
+        try:
+            updateShow(showid, form)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
+        return redirect(url_for('database.search', message=foundMessage))
+
     # display the single result
-    show = Show.query.filter_by(id=237).first()
-    # # show = Show.query.filter_by(id=showid).first()
+    show = Show.query.filter_by(id=showid).first()
     #
     form.location.data = show.location
     form.title.data = show.title
