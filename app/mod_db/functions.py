@@ -26,6 +26,9 @@ class ShowToDisplay:
             self.performername = ''
             self.performerfirstname = ''
 
+def getAllShows():
+    list = Show.query.all()
+    return list
 
 def searchInDb(searchitems):
     ''' extract items from searchitems,

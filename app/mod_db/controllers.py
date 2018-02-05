@@ -83,11 +83,20 @@ def edit(showid):
 @mod_db.route('/showsresults/<searchitems>', methods=['GET', 'POST'])
 def showsresults(searchitems):
     form = ShowsResultsForm()
-    # we need the results of search onSubmit too,
-    # to update the medium and ratings
+    # TODO fix the situation if only performer choosen
     searchdir = json.loads(searchitems)
     foundShowsList = searchInDb(searchdir)
-    resultCount = len(foundShowsList)
+    # list = 0, if ony show found
+    # list = None if search not run
+
+    itemperformer = searchdir['performer']
+    if foundShowsList == None:
+        if itemperformer != '':
+            foundShowsList = getAllShows()
+        else:
+            resultCount = 0
+    else:
+        resultCount = len(foundShowsList)
 
     listShowsToDisplay = []
     if foundShowsList != None:
@@ -95,7 +104,6 @@ def showsresults(searchitems):
             showToDisplay = ShowToDisplay(show)
             listShowsToDisplay.append(showToDisplay)
 
-    itemperformer = searchdir['performer']
     if itemperformer != '':
         foundList = filterShowsWithPerfName(listShowsToDisplay, itemperformer)
     else:
