@@ -5,6 +5,27 @@ from jinja2 import Template
 from app import db
 from app.mod_db.models import Show, Performer
 
+class ShowToDisplay:
+    def __init__(self,
+                 show
+                 ):
+        self.id = show.id
+        self.title = show.title
+        self.showdate = show.showdate
+        self.medium = show.medium
+        self.source = show.source
+        self.location = show.location
+        self.number = show.number
+        self.lengthinmin = show.lengthinmin
+        try:
+            performer = show.performer[0]
+            # mainperformer = Performer.query.filter_by(id=performer).first()
+            self.performername = performer.name
+            self.performerfirstname = performer.firstname
+        except:
+            self.performername = ''
+            self.performerfirstname = ''
+
 
 def searchInDb(searchitems):
     ''' extract items from searchitems,

@@ -76,14 +76,14 @@ def readFileAddItemsToDb(fileName):
                     linecount = linecount + 1
                     name = row[1]
                     firstname = row[0]
-                    if len(row) > 3:
-                        city = row[3]
-                    else:
-                        city = ''
                     if len(row) > 2:
                         showdate = row[2]
                     else:
                         showdate = ''
+                    if len(row) > 3:
+                        city = row[3]
+                    else:
+                        city = ''
                     if len(row) > 4:
                         title = row[4]
                     else:

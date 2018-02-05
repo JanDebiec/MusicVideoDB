@@ -37,17 +37,20 @@ class Show(DbBase):
     lengthinmin = db.Column(db.Integer)
     number = db.Column(db.String(8))
     place = db.Column(db.String(8))
+    notes = db.Column(db.Text())
+
+    def __init__(self, location='',  showdate='', title='', publishyear='',
+                  medium='', lengthinmin=0, source='', place='', number=''):
+        self.location = location
+        self.showdate = showdate
+        self.title = title
+        self.publishyear = publishyear
+        self.source = source
+        self.medium = medium
+        self.lengthinmin = lengthinmin
+        self.place = place
+        self.number = number
 
 
-# tags = db.Table('tags',
-#     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
-#     db.Column('page_id', db.Integer, db.ForeignKey('page.id'), primary_key=True)
-# )
-
-# class Page(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     tags = db.relationship('Tag', secondary=tags, lazy='subquery',
-#         backref=db.backref('pages', lazy=True))
-#
-# class Tag(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
+    def __repr__(self):
+        return '<Show showdate={} title={} medium={}'.format(self.showdate, self.title, self.medium)

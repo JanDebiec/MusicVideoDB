@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField
+from wtforms import StringField, BooleanField, SubmitField, TextAreaField
 
 from wtforms.validators import DataRequired
 
@@ -11,6 +11,7 @@ class SingleShowForm(FlaskForm):
     medium = StringField('Medium')
     place = StringField('Place')
     source = StringField('Source')
+    notes = TextAreaField('Notes')
 
 class SearchDbForm(SingleShowForm):
     submit = SubmitField('Search')

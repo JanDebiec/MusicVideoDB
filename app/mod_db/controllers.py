@@ -4,7 +4,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import SearchDbForm, ShowsResultsForm
+from app.mod_db.forms import SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -38,6 +38,30 @@ def search():
                             form=form,
                             message=foundMessage)
 
+@mod_db.route('/edit', methods=['GET', 'POST'])
+def edit():
+    form = EditShowForm()
+    foundMessage = 'edit'
+    # init content of form
+    # searchdir = {}
+    # if form.validate_on_submit():
+    #     searchdir['year'] = form.year.data
+    #     searchdir['medium'] = form.medium.data
+    #     searchdir['place'] = form.place.data
+    #
+    #     searchitems = json.dumps(searchdir)
+    #     return redirect(url_for('database.showsresults', searchitems=searchitems))
+    #     # if searchitems['amgrating'] =='':
+    #     #     return redirect(url_for('database.pageresults', searchitems=searchitems))
+    #     # else:
+    #     #     return redirect(url_for('database.amgresults', searchitems=searchitems))
+
+    # show form with proper message
+    return render_template('mod_db/edit.html',
+                            title='Edit Show',
+                            form=form,
+                            message=foundMessage)
+
 @mod_db.route('/showsresults/<searchitems>', methods=['GET', 'POST'])
 def showsresults(searchitems):
     form = ShowsResultsForm()
@@ -47,11 +71,11 @@ def showsresults(searchitems):
     foundShowsList = searchInDb(searchdir)
     resultCount = len(foundShowsList)
 
-    listShowsToDisplay = foundShowsList
-    # if foundShowsList != None:
-    #     for movie in foundShowsList:
-    #         movieToDisplay = convertMovieToDIsplay(movie)
-    #         listMovieToDisplay.append(movieToDisplay)
+    listShowsToDisplay = []
+    if foundShowsList != None:
+        for show in foundShowsList:
+            showToDisplay = ShowToDisplay(show)
+            listShowsToDisplay.append(showToDisplay)
 
 
     if form.validate_on_submit():
@@ -101,6 +125,6 @@ def showsresults(searchitems):
                            form=form,
                            showscount=resultCount,
                            # ownerRatings = ownerRatings,
-                           shows=foundShowsList
+                           shows=listShowsToDisplay
                            )
 
