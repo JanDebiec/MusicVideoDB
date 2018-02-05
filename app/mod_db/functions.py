@@ -52,15 +52,18 @@ def searchInDb(searchitems):
 
     itemyear = searchitems['year']
     if itemyear != '':
+        looking_for = '%{0}%'.format(itemyear)
         if queryStarted == False:
-            queryresult = Show.query.filter_by(showdate=itemyear)
+            queryresult = Show.query.filter(Show.showdate.like(looking_for))
+            # queryresult = Show.query.filter_by(showdate=itemyear)
             queryStarted = True
         else:
-            queryresult = queryresult.filter_by(showdate=itemyear)
+            queryresult = queryresult.filter(Show.showdate.like(looking_for))
+            # queryresult = queryresult.filter_by(showdate=itemyear)
 
     itemplace = searchitems['place']
-    looking_for = '%{0}%'.format(itemplace)
     if itemplace != '':
+        looking_for = '%{0}%'.format(itemplace)
         if queryStarted == False:
             # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.location.like(looking_for))
@@ -68,11 +71,21 @@ def searchInDb(searchitems):
         else:
             queryresult = queryresult.filter(Show.location.like(looking_for))
 
-
     if  queryStarted:
         found = queryresult.all()
 
     return found
+
+def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
+    listWithPerf = []
+    for show in listShowsToDisplay:
+        perfName = show.performername
+        if itemperformer in perfName:
+            listWithPerf.append(show)
+
+    return listWithPerf
+
+
 
 #
 # def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):

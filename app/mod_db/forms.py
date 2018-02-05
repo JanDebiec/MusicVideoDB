@@ -14,6 +14,7 @@ class SingleShowForm(FlaskForm):
     notes = TextAreaField('Notes')
 
 class SearchDbForm(SingleShowForm):
+    performer = StringField('Performer')
     submit = SubmitField('Search')
 
 # class SingleResultForm(SingleMovieForm):

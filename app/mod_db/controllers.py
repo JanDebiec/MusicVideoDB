@@ -26,6 +26,7 @@ def search():
         searchdir['year'] = form.year.data
         searchdir['medium'] = form.medium.data
         searchdir['place'] = form.place.data
+        searchdir['performer'] = form.performer.data
 
         searchitems = json.dumps(searchdir)
         return redirect(url_for('database.showsresults', searchitems=searchitems))
@@ -94,6 +95,12 @@ def showsresults(searchitems):
             showToDisplay = ShowToDisplay(show)
             listShowsToDisplay.append(showToDisplay)
 
+    itemperformer = searchdir['performer']
+    if itemperformer != '':
+        foundList = filterShowsWithPerfName(listShowsToDisplay, itemperformer)
+    else:
+        foundList = listShowsToDisplay
+    resultCount = len(foundList)
 
     if form.validate_on_submit():
         if request.method == 'POST':
@@ -142,6 +149,6 @@ def showsresults(searchitems):
                            form=form,
                            showscount=resultCount,
                            # ownerRatings = ownerRatings,
-                           shows=listShowsToDisplay
+                           shows=foundList
                            )
 
