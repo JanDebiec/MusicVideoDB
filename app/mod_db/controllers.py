@@ -1,6 +1,8 @@
 import json
+import sys
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
+from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
@@ -38,10 +40,29 @@ def search():
                             form=form,
                             message=foundMessage)
 
-@mod_db.route('/edit', methods=['GET', 'POST'])
-def edit():
+@mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
+def edit(showid):
     form = EditShowForm()
     foundMessage = 'edit'
+    # display the single result
+    show = Show.query.filter_by(id=showid).first()
+
+    form.location = show.location
+    form.title = show.title
+    form.year = show.showdate
+    form.medium = show.medium
+    form.place = show.place
+    form.source = show.source
+    form.notes = show.notes
+    try:
+        performer = show.performer[0]
+        # mainperformer = Performer.query.filter_by(id=performer).first()
+        performername = performer.name
+        performerfirstname = performer.firstname
+    except:
+        performername = ''
+        performerfirstname = ''
+        current_app.logger.error('performer not found', exc_info=sys.exc_info())
     # init content of form
     # searchdir = {}
     # if form.validate_on_submit():

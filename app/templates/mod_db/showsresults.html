@@ -20,6 +20,7 @@
                 <td>{{ show.number }}</td>
                 <td><input type='text' name="place[{{ loop.index0 }}]" size="4" maxlength="6"
                            value='{{ show.place }}'></td>
+                <td><a href="{{ url_for('database.edit', showid=show.id) }}">edit</a></td>
 
             </tr>
             {% endfor %}
