@@ -40,20 +40,23 @@ def search():
                             form=form,
                             message=foundMessage)
 
+# @mod_db.route('/edit', methods=['GET', 'POST'])
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
+# def edit():
 def edit(showid):
     form = EditShowForm()
     foundMessage = 'edit'
     # display the single result
-    show = Show.query.filter_by(id=showid).first()
-
-    form.location = show.location
-    form.title = show.title
-    form.year = show.showdate
-    form.medium = show.medium
-    form.place = show.place
-    form.source = show.source
-    form.notes = show.notes
+    show = Show.query.filter_by(id=237).first()
+    # # show = Show.query.filter_by(id=showid).first()
+    #
+    form.location.data = show.location
+    form.title.data = show.title
+    form.year.data = show.showdate
+    form.medium.data = show.medium
+    form.place.data = show.place
+    form.source.data = show.source
+    form.notes.data = show.notes
     try:
         performer = show.performer[0]
         # mainperformer = Performer.query.filter_by(id=performer).first()
@@ -63,19 +66,7 @@ def edit(showid):
         performername = ''
         performerfirstname = ''
         current_app.logger.error('performer not found', exc_info=sys.exc_info())
-    # init content of form
-    # searchdir = {}
-    # if form.validate_on_submit():
-    #     searchdir['year'] = form.year.data
-    #     searchdir['medium'] = form.medium.data
-    #     searchdir['place'] = form.place.data
-    #
-    #     searchitems = json.dumps(searchdir)
-    #     return redirect(url_for('database.showsresults', searchitems=searchitems))
-    #     # if searchitems['amgrating'] =='':
-    #     #     return redirect(url_for('database.pageresults', searchitems=searchitems))
-    #     # else:
-    #     #     return redirect(url_for('database.amgresults', searchitems=searchitems))
+
 
     # show form with proper message
     return render_template('mod_db/edit.html',

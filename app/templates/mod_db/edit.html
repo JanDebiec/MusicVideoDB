@@ -2,7 +2,7 @@
 {% block app_content %}
 <h1>Search Input</h1>
 {% if message %}
-{{ message }}
+    {{ message }}
 {% endif %}
 <form action="" method="post">
     {{ form.hidden_tag() }}
@@ -20,7 +20,8 @@
             <td>{{ form.year(size=4)}}</td>
         </tr>
         <tr>
-        <td></td><td>medium</td>
+            <td></td>
+            <td>medium</td>
         </tr>
         <tr>
             <td>{{ form.medium.label}}</td>
@@ -29,14 +30,16 @@
             <td>{{ form.place(size=6)}}</td>
         </tr>
         <tr>
-            <td></td><td>{{ form.notes.label}}</td><td></td>
+            <td></td>
+            <td>{{ form.notes.label}}</td>
+            <td></td>
         </tr>
     </table>
-        <p>
-            {{ form.notes() }}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
+    <p>
+        {{ form.notes() }}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
 </form>
 {% endblock %}
