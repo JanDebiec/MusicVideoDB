@@ -133,7 +133,7 @@ def delPerfFromAll(perfobj):
 
     # remove perf from that shows
     for show in showsToEdit:
-        delPerfFromShow(show, perfobj)
+        delPerfFromShow(show, perfobj, False)
 
     # at the end del the performer obj
     db.session.delete(perfobj)
@@ -214,12 +214,14 @@ def updateShow(showid, form):
         db.session.commit()
 
 
-def delPerfFromShow(show, perf):
+def delPerfFromShow(show, perf, commitFlag):
     perfid = perf.id
     perflist = show.performers
     for perf in perflist:
         if perf.id == perfid:
             show.performers.delete(perf)
+    if commitFlag:
+        db.session.commit()
 
 
 def updateMediumInDb(foundList, inputMedium):

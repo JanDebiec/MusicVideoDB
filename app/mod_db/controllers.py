@@ -137,18 +137,19 @@ def deleteperffromshow(showid,perfnr):
 
     # print('delete perf nr {} from show id {}'.format(perfnr, showid))
     show = Show.query.filter_by(id=showid).first()
-    nr = int(perfnr)
-    perf = show.performer[nr]
+    # nr = int(perfnr)
+    perf = Performer.query.filter_by(id=perfnr).first()
     if form.validate_on_submit():
         try:
             current_app.logger.info('delete perf nr {} from show id {}'.format(perfnr, showid))
-            delPerfFromShow(show, perf)
+            delPerfFromShow(show, perf, True)
+            # db.session.commit()
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
 
         return redirect(url_for('database.search', message=foundMessage))
     form.firstname.data = perf.firstname
-    form.name.data = perf.firstname
+    form.name.data = perf.name
     form.location.data = show.location
     form.title.data = show.title
     form.year.data = show.showdate
