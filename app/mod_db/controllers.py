@@ -73,11 +73,22 @@ def showperformers(searchitems):
 @mod_db.route('/editperformer/<performerid>', methods=['GET', 'POST'])
 def editperformer(performerid):
     form = EditPerformerForm()
+    message = 'Edit Performer'
+    if form.validate_on_submit():
+        perf = Performer.query.filter_by(id=performerid).first()
+        perf.name = form.name.data
+        perf.firstname = form.firstname.data
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    perf = Performer.query.filter_by(id=performerid).first()
+    form.firstname.data = perf.firstname
+    form.name.data = perf.name
+
     return render_template('mod_db/editperformer.html',
                             title='List Performers',
                             form=form,
-                           performers=foundList,
-                            message=foundMessage)
+                           perf=perf,
+                            message=message)
 
 @mod_db.route('/deleteperformer/<performerid>', methods=['GET', 'POST'])
 def deleteperformer(performerid):
