@@ -119,11 +119,13 @@ def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
     return listWithPerf
 
 
-def delPerfFromAll(perfobj):
+def delPerfFromAll(performerid):
+    performer = Performer.query.filter_by(id=performerid).first()
+
     # create the list of shows
     shows = Show.query.all()
     showsToEdit = []
-    perfid = perfobj.id
+    perfid = performer.id
     for show in shows:
         perflist = show.performers
         for perf in perflist:
@@ -133,10 +135,10 @@ def delPerfFromAll(perfobj):
 
     # remove perf from that shows
     for show in showsToEdit:
-        delPerfFromShow(show, perfobj, False)
+        delPerfFromShow(show, performer, False)
 
     # at the end del the performer obj
-    db.session.delete(perfobj)
+    db.session.delete(performer)
     db.session.commit()
 
 
@@ -214,7 +216,8 @@ def updateShow(showid, form):
         db.session.commit()
 
 
-def delPerfFromShow(show, perf, commitFlag):
+def delPerfFromShow(show, perfnr, commitFlag):
+    perf = Performer.query.filter_by(id=perfnr).first()
     perfid = perf.id
     perflist = show.performers
     for perf in perflist:

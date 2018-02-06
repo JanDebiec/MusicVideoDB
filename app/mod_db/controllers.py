@@ -93,9 +93,8 @@ def editperformer(performerid):
 @mod_db.route('/deleteperformer/<performerid>', methods=['GET', 'POST'])
 def deleteperformer(performerid):
     form = DeletePerformerForm()
-    perf = Performer.query.filter_by(id=performerid).first()
     if form.validate_on_submit():
-        delPerfFromAll(perf)
+        delPerfFromAll(performerid)
         return redirect(url_for('index'))
     foundMessage = 'delete Performer from DB and from all Shows?'
     return render_template('mod_db/deleteperformer.html',
@@ -149,16 +148,16 @@ def deleteperffromshow(showid,perfnr):
     # print('delete perf nr {} from show id {}'.format(perfnr, showid))
     show = Show.query.filter_by(id=showid).first()
     # nr = int(perfnr)
-    perf = Performer.query.filter_by(id=perfnr).first()
     if form.validate_on_submit():
         try:
             current_app.logger.info('delete perf nr {} from show id {}'.format(perfnr, showid))
-            delPerfFromShow(show, perf, True)
+            delPerfFromShow(show, perfnr, True)
             # db.session.commit()
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
 
         return redirect(url_for('database.search', message=foundMessage))
+    perf = Performer.query.filter_by(id=perfnr).first()
     form.firstname.data = perf.firstname
     form.name.data = perf.name
     form.location.data = show.location
