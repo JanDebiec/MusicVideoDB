@@ -1,6 +1,5 @@
 import json
-from flask import Blueprint, render_template, flash, redirect, url_for, request
-from jinja2 import Template
+from flask import current_app
 
 from app import db
 from app.mod_db.models import Show, Performer
@@ -175,6 +174,7 @@ def updateShow(showid, form):
                 flagPerfAllocated = True
 
         if flagPerfAllocated == False:
+            current_app.logger.info('added performer to show')
             obj.performers.append(perf)
             commitFlag = True
 

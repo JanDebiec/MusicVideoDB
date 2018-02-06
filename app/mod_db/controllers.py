@@ -79,8 +79,18 @@ def edit(showid):
 
 @mod_db.route('/deleteperf/<showid>/<perfnr>', methods=['GET', 'POST'])
 def deleteperf(showid,perfnr):
-    print('delete perf nr {} from show id {}'.format(perfnr, showid))
     form = DeletePerformerFromShowForm()
+    foundMessage = ''
+    if form.validate_on_submit():
+        try:
+            current_app.logger.info('delete perf nr {} from show id {}'.format(perfnr, showid))
+            # updateShow(showid, form)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
+        return redirect(url_for('database.search', message=foundMessage))
+
+    # print('delete perf nr {} from show id {}'.format(perfnr, showid))
     show = Show.query.filter_by(id=showid).first()
     nr = int(perfnr)
     perf = show.performer[nr]
@@ -90,7 +100,8 @@ def deleteperf(showid,perfnr):
     form.title.data = show.title
     form.year.data = show.showdate
     return render_template('mod_db/deleteperformerfromshow.html',
-                           title='Delete performer',
+                           title='Title',
+                           message='Delete performer',
                            form=form
                            )
 
