@@ -6,7 +6,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
+from app.mod_db.forms import DeletePerformerForm, EditPerformerForm, ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -70,6 +70,30 @@ def showperformers(searchitems):
                             message=foundMessage)
 
 
+@mod_db.route('/editperformer/<performerid>', methods=['GET', 'POST'])
+def editperformer(performerid):
+    form = EditPerformerForm()
+    return render_template('mod_db/editperformer.html',
+                            title='List Performers',
+                            form=form,
+                           performers=foundList,
+                            message=foundMessage)
+
+@mod_db.route('/deleteperformer/<performerid>', methods=['GET', 'POST'])
+def deleteperformer(performerid):
+    form = DeletePerformerForm()
+    perf = Performer.query.filter_by(id=performerid).first()
+    if form.validate_on_submit():
+        delPerfFromAll(perf)
+        return redirect(url_for('index'))
+    foundMessage = 'delete Performer from DB and from all Shows?'
+    return render_template('mod_db/deleteperformer.html',
+                            title='Delete Performer',
+                            form=form,
+                           perf=perf,
+                            message=foundMessage)
+
+
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
 def edit(showid):
     form = EditShowForm()
@@ -110,19 +134,19 @@ def edit(showid):
 def deleteperffromshow(showid,perfnr):
     form = DeletePerformerFromShowForm()
     foundMessage = ''
-    if form.validate_on_submit():
-        try:
-            current_app.logger.info('delete perf nr {} from show id {}'.format(perfnr, showid))
-            # updateShow(showid, form)
-        except:
-            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
-
-        return redirect(url_for('database.search', message=foundMessage))
 
     # print('delete perf nr {} from show id {}'.format(perfnr, showid))
     show = Show.query.filter_by(id=showid).first()
     nr = int(perfnr)
     perf = show.performer[nr]
+    if form.validate_on_submit():
+        try:
+            current_app.logger.info('delete perf nr {} from show id {}'.format(perfnr, showid))
+            delPerfFromShow(show, perf)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
+        return redirect(url_for('database.search', message=foundMessage))
     form.firstname.data = perf.firstname
     form.name.data = perf.firstname
     form.location.data = show.location

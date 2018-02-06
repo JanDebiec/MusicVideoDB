@@ -119,25 +119,26 @@ def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
     return listWithPerf
 
 
+def delPerfFromAll(perfobj):
+    # create the list of shows
+    shows = Show.query.all()
+    showsToEdit = []
+    perfid = perfobj.id
+    for show in shows:
+        perflist = show.performers
+        for perf in perflist:
+            if perf.id == perfid:
+                showsToEdit.append(show)
 
-#
-# def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):
-#
-#     found = Movie.query.filter_by(imdbId= movieId).first()
-#     found.titleLocal = inputTitle
-#     found.medium = medium
-#     found.source = source
-#     found.place = place
-#
-#     try:
-#         critic = Critic.query.filter_by(name='JD').first()
-#         rat = Rating(movie_id=found.id, critic_id=critic.id, value=ownrating)
-#         db.session.add(rat)
-#     except:
-#         pass
-#
-#
-#     db.session.commit()
+
+    # remove perf from that shows
+    for show in showsToEdit:
+        delPerfFromShow(show, perfobj)
+
+    # at the end del the performer obj
+    db.session.delete(perfobj)
+    db.session.commit()
+
 
 
 
@@ -146,6 +147,7 @@ def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
 #     print(obj)
 #     db.session.delete(obj)
 #     db.session.commit()
+
 def updateShow(showid, form):
     commitFlag = False
 
@@ -195,7 +197,6 @@ def updateShow(showid, form):
         perf = Performer.query.filter_by(name=newName).filter_by(firstname=newFName).first()
         if perf == None:
             perf = Performer(name=newName, firstname=newFName)
-        # TODO check if performer already allocated to show
         newperfid = perf.id
         flagPerfAllocated = False
         performers = obj.performer
@@ -211,6 +212,14 @@ def updateShow(showid, form):
 
     if commitFlag == True:
         db.session.commit()
+
+
+def delPerfFromShow(show, perf):
+    perfid = perf.id
+    perflist = show.performers
+    for perf in perflist:
+        if perf.id == perfid:
+            show.performers.delete(perf)
 
 
 def updateMediumInDb(foundList, inputMedium):
