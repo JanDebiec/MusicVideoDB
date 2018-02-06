@@ -135,7 +135,7 @@ def delPerfFromAll(performerid):
 
     # remove perf from that shows
     for show in showsToEdit:
-        delPerfFromShow(show, performer, False)
+        delPerfFromShow(show.id, performer, False)
 
     # at the end del the performer obj
     db.session.delete(performer)
@@ -216,14 +216,17 @@ def updateShow(showid, form):
         db.session.commit()
 
 
-def delPerfFromShow(show, perfnr, commitFlag):
+def delPerfFromShow(showid, perfnr, externFlag):
+    show = Show.query.filter_by(id=showid).first()
     perf = Performer.query.filter_by(id=perfnr).first()
     perfid = perf.id
     perflist = show.performers
+    flagCommit = False
     for perf in perflist:
         if perf.id == perfid:
-            show.performers.delete(perf)
-    if commitFlag:
+            show.performers.remove(perf)
+            flagCommit = True
+    if externFlag and flagCommit:
         db.session.commit()
 
 
