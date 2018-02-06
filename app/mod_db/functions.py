@@ -29,6 +29,37 @@ def getAllShows():
     list = Show.query.all()
     return list
 
+def searchPerformersInDb(searchitems):
+    queryStarted = False
+    found = None
+    queryresult = None
+    # only equal reults, DVD and excluded DVDR
+    itemname = searchitems['name']
+    if itemname != '':
+        looking_for = '%{0}%'.format(itemname)
+        if queryStarted == False:
+            queryresult = Performer.query.filter(Performer.name.like(looking_for))
+            # queryresult = Show.query.filter_by(showdate=itemyear)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Performer.name.like(looking_for))
+            # queryresult = queryresult.filter_by(showdate=itemyear)
+    itemfname = searchitems['firstname']
+    if itemfname != '':
+        looking_for = '%{0}%'.format(itemfname)
+        if queryStarted == False:
+            queryresult = Performer.query.filter(Performer.firstname.like(looking_for))
+            # queryresult = Show.query.filter_by(showdate=itemyear)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Performer.firstname.like(looking_for))
+            # queryresult = queryresult.filter_by(showdate=itemyear)
+    if  queryStarted:
+        found = queryresult.all()
+
+    return found
+
+
 def searchInDb(searchitems):
     ''' extract items from searchitems,
     search for all movies, that fulfils the criteria

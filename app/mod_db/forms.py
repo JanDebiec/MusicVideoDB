@@ -43,13 +43,23 @@ class ShowsResultsForm(FlaskForm):
 # class CriticsListForm(FlaskForm):
 #     submit = SubmitField('Update')
 #
+
+class ShowsPerformersForm(FlaskForm):
+    addperformername = StringField('Add Performer Name')
+    addperformerfname = StringField('Add Performer First Name')
+    submit = SubmitField('Update')
+
+
+
 class SinglePerformerForm(FlaskForm):
     firstname = StringField('First Name')
     name = StringField('Name')
 
 class EditPerformerForm(SinglePerformerForm):
-
     submit = SubmitField('Update')
+
+class AddPerformerForm(SinglePerformerForm):
+    submit = SubmitField('Add')
 
 class DeletePerformerForm(SinglePerformerForm):
     submit = SubmitField('Delete')

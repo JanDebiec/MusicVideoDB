@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>List of found performers:</h1>
+{% if message %}
+    {{ message }}
+{% endif %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>Performers:</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% for perf in performers %}
+        <tr>
+            <td></td>
+            <td>{{perf.firstname}}</td>
+            <td>{{perf.name}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+        </tr>
+        <tr>
+            <td>Add performer:</td>
+            <td>First name</td>
+            <td>Name</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.addperformerfname(size=16)}}</td>
+            <td>{{ form.addperformername(size=16)}}</td>
+        </tr>
+
+    </table>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

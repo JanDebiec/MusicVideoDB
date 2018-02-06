@@ -39,7 +39,7 @@
             <td></td>
             <td>{{perf.firstname}}</td>
             <td>{{perf.name}}</td>
-            <td><a href="{{ url_for('database.deleteperf',perfnr=0, showid=show.id )}}">delete</a></td>
+            <td><a href="{{ url_for('database.deleteperffromshow',perfnr=0, showid=show.id )}}">delete</a></td>
         </tr>
         {% endfor %}
         <tr>

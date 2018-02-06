@@ -6,7 +6,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
+from app.mod_db.forms import ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -30,16 +30,45 @@ def search():
 
         searchitems = json.dumps(searchdir)
         return redirect(url_for('database.showsresults', searchitems=searchitems))
-        # if searchitems['amgrating'] =='':
-        #     return redirect(url_for('database.pageresults', searchitems=searchitems))
-        # else:
-        #     return redirect(url_for('database.amgresults', searchitems=searchitems))
 
     # show form with proper message
     return render_template('mod_db/search.html',
                             title='Search Show',
                             form=form,
                             message=foundMessage)
+
+@mod_db.route('/searchperformer', methods=['GET', 'POST'])
+def searchperformer():
+    form = SearchPerformerForm()
+    foundMessage = 'search'
+    # init content of form
+    searchdir = {}
+    if form.validate_on_submit():
+        searchdir['name'] = form.name.data
+        searchdir['firstname'] = form.firstname.data
+
+        searchitems = json.dumps(searchdir)
+        return redirect(url_for('database.showperformers', searchitems=searchitems))
+
+    # show form with proper message
+    return render_template('mod_db/searchperformer.html',
+                            title='Search Performer',
+                            form=form,
+                            message=foundMessage)
+
+
+@mod_db.route('/showperformers/<searchitems>', methods=['GET', 'POST'])
+def showperformers(searchitems):
+    form = ShowsPerformersForm()
+    searchdir = json.loads(searchitems)
+    foundList = searchPerformersInDb(searchdir)
+    foundMessage = 'found {} performers'.format(len(foundList))
+    return render_template('mod_db/showperformers.html',
+                            title='List Performers',
+                            form=form,
+                           performers=foundList,
+                            message=foundMessage)
+
 
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
 def edit(showid):
@@ -77,8 +106,8 @@ def edit(showid):
                            performers=performers,
                             message=foundMessage)
 
-@mod_db.route('/deleteperf/<showid>/<perfnr>', methods=['GET', 'POST'])
-def deleteperf(showid,perfnr):
+@mod_db.route('/deleteperffromshow/<showid>/<perfnr>', methods=['GET', 'POST'])
+def deleteperffromshow(showid,perfnr):
     form = DeletePerformerFromShowForm()
     foundMessage = ''
     if form.validate_on_submit():
