@@ -54,6 +54,12 @@ class EditPerformerForm(SinglePerformerForm):
 class DeletePerformerForm(SinglePerformerForm):
     submit = SubmitField('Delete')
 
+class DeletePerformerFromShowForm(SinglePerformerForm):
+    location = StringField('Location')
+    title = StringField('Title')
+    year = StringField('Year')
+    submit = SubmitField('Delete')
+
 class SearchPerformerForm(SinglePerformerForm):
     submit = SubmitField('Search')
 

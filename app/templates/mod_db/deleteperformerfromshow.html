@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Search Input</h1>
+{% if message %}
+    {{ message }}
+{% endif %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>{{ form.title.label}}</td>
+            <td>{{ form.title}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.location.label}}</td>
+            <td>{{ form.location}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.year.label}}</td>
+            <td>{{ form.year}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Performer:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{form.firstname}}</td>
+            <td>{{form.name}}</td>
+        </tr>
+
+    </table>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

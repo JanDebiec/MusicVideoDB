@@ -30,9 +30,19 @@
             <td>{{ form.place(size=6)}}</td>
         </tr>
         <tr>
-            <td>{{ form.notes.label}}</td>
             <td></td>
+            <td>Performers:</td>
             <td></td>
+        </tr>
+        {% for perf in performers %}
+        <tr>
+            <td></td>
+            <td>{{perf.firstname}}</td>
+            <td>{{perf.name}}</td>
+            <td><a href="{{ url_for('database.deleteperf',perfnr=0, showid=show.id )}}">delete</a></td>
+        </tr>
+        {% endfor %}
+        <tr>
         </tr>
         <tr>
             <td>Add performer:</td>
@@ -43,6 +53,11 @@
             <td></td>
             <td>{{ form.addperformerfname(size=16)}}</td>
             <td>{{ form.addperformername(size=16)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.notes.label}}</td>
+            <td></td>
+            <td></td>
         </tr>
 
     </table>

@@ -6,7 +6,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import SearchDbForm, ShowsResultsForm, EditShowForm
+from app.mod_db.forms import DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -64,28 +64,45 @@ def edit(showid):
     form.source.data = show.source
     form.notes.data = show.notes
     try:
-        performer = show.performer[0]
-        # mainperformer = Performer.query.filter_by(id=performer).first()
-        performername = performer.name
-        performerfirstname = performer.firstname
+        performers = show.performer
     except:
-        performername = ''
-        performerfirstname = ''
-        current_app.logger.error('performer not found', exc_info=sys.exc_info())
+        current_app.logger.error('performers not found', exc_info=sys.exc_info())
 
 
     # show form with proper message
     return render_template('mod_db/edit.html',
                             title='Edit Show',
                             form=form,
+                           show=show,
+                           performers=performers,
                             message=foundMessage)
+
+@mod_db.route('/deleteperf/<showid>/<perfnr>', methods=['GET', 'POST'])
+def deleteperf(showid,perfnr):
+    print('delete perf nr {} from show id {}'.format(perfnr, showid))
+    form = DeletePerformerFromShowForm()
+    show = Show.query.filter_by(id=showid).first()
+    nr = int(perfnr)
+    perf = show.performer[nr]
+    form.firstname.data = perf.firstname
+    form.name.data = perf.firstname
+    form.location.data = show.location
+    form.title.data = show.title
+    form.year.data = show.showdate
+    return render_template('mod_db/deleteperformerfromshow.html',
+                           title='Delete performer',
+                           form=form
+                           )
+
+
+
 
 @mod_db.route('/showsresults/<searchitems>', methods=['GET', 'POST'])
 def showsresults(searchitems):
     form = ShowsResultsForm()
-    # TODO fix the situation if only performer choosen
     searchdir = json.loads(searchitems)
     foundShowsList = searchInDb(searchdir)
+    
     # list = 0, if ony show found
     # list = None if search not run
 
