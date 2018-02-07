@@ -112,10 +112,33 @@ class TestAppDb:
         milesAtParis.add_performer(miles)
         milesAtParis.add_performer(miles)
         db.session.add(milesAtParis)
+        db.session.commit()
+
+        flasm = milesAtParis.is_included(miles)
+        assert flasm == True
+
+        perfCount = milesAtParis.performers.count()
+        assert perfCount == 1
 
         s = Show.query.all()
-        p = s[0].performers
-        print(type(p))
+        p = s[0].performers.all()
+        assert len(p) == 1
+
+        milesAtParis.delete_performer(miles)
+        milesAtParis.delete_performer(miles)
+        milesAtParis.delete_performer(miles)
+        milesAtParis.delete_performer(miles)
+        db.session.commit()
+
+        flasm = milesAtParis.is_included(miles)
+        assert flasm == False
+
+        perfCount = milesAtParis.performers.count()
+        assert perfCount == 0
+
+        s = Show.query.all()
+        p = s[0].performers.all()
+        assert len(p) == 0
 
     # def test_follow(self):
     #     u1 = User(username='john', email='john@example.com')
