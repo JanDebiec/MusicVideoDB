@@ -54,3 +54,29 @@ class Show(DbBase):
 
     def __repr__(self):
         return '<Show showdate={} title={} medium={}'.format(self.showdate, self.title, self.medium)
+
+    def add_performer(self, performer):
+        if not self.is_included(performer):
+            self.performers.append(performer)
+
+    def delete_performer(self, performer):
+        if self.is_included(performer):
+            self.performers.remove(performer)
+
+    def is_included(self, performer):
+        flagIncluded = False
+        for perf in self.performers:
+            if performer.id == perf.id:
+                flagIncluded = True
+        return flagIncluded
+
+        # return self.performers.filter(
+        #     shows.c.performer_id == performer.id).count() > 0
+
+    # def followed_posts(self):
+    #     followed = Post.query.join(
+    #         followers, (followers.c.followed_id == Post.user_id)).filter(
+    #             followers.c.follower_id == self.id)
+    #     own = Post.query.filter_by(user_id=self.id)
+    #     return followed.union(own).order_by(Post.timestamp.desc())
+

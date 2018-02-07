@@ -101,6 +101,48 @@ class TestAppDb:
         count = len(s)
         assert count == 2
 
+
+    def test_add_two_shows_add_perf(self):
+        milesAtParis = Show(title='Miles at Paris')
+        milesInWwa = Show(title='Miles in Warsaw 1985')
+        goldberg83 = Show(title='Goldberg variations 1983')
+        miles = Performer(name='Miles Davis')
+        gould = Performer(name='Glenn Gould')
+        # add twice, should be only once
+        milesAtParis.add_performer(miles)
+        milesAtParis.add_performer(miles)
+        db.session.add(milesAtParis)
+
+        s = Show.query.all()
+        p = s[0].performers
+        print(type(p))
+
+    # def test_follow(self):
+    #     u1 = User(username='john', email='john@example.com')
+    #     u2 = User(username='susan', email='susan@example.com')
+    #     db.session.add(u1)
+    #     db.session.add(u2)
+    #     db.session.commit()
+    #     self.assertEqual(u1.followed.all(), [])
+    #     self.assertEqual(u1.followers.all(), [])
+    #
+    #     u1.follow(u2)
+    #     db.session.commit()
+    #     self.assertTrue(u1.is_following(u2))
+    #     self.assertEqual(u1.followed.count(), 1)
+    #     self.assertEqual(u1.followed.first().username, 'susan')
+    #     self.assertEqual(u2.followers.count(), 1)
+    #     self.assertEqual(u2.followers.first().username, 'john')
+    #
+    #     u1.unfollow(u2)
+    #     db.session.commit()
+    #     self.assertFalse(u1.is_following(u2))
+    #     self.assertEqual(u1.followed.count(), 0)
+    #     self.assertEqual(u2.followers.count(), 0)
+
+
+
+
     # def test_add_query_two_roles(self):
     #     an = Movie(titleImdb='Apocalypse Now')
     #     sic = Movie(titleImdb='Sicario')
