@@ -40,7 +40,8 @@ class Show(DbBase):
     notes = db.Column(db.Text())
 
     def __init__(self, location='',  showdate='', title='', publishyear='',
-                  medium='', lengthinmin=0, source='', place='', number=''):
+                  medium='', lengthinmin=0, source='', place='', number='',
+                 notes=''):
         self.location = location
         self.showdate = showdate
         self.title = title
@@ -50,6 +51,7 @@ class Show(DbBase):
         self.lengthinmin = lengthinmin
         self.place = place
         self.number = number
+        self.notes = notes
 
 
     def __repr__(self):

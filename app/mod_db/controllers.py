@@ -6,7 +6,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import DeletePerformerForm, EditPerformerForm, ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
+from app.mod_db.forms import DeleteShowForm, AddShowForm, DeletePerformerForm, EditPerformerForm, ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -61,6 +61,9 @@ def searchperformer():
 def showperformers(searchitems):
     form = ShowsPerformersForm()
     searchdir = json.loads(searchitems)
+    if form.validate_on_submit():
+        addPerformer(form)
+        return redirect(url_for('main.index'))
     foundList = searchPerformersInDb(searchdir)
     foundMessage = 'found {} performers'.format(len(foundList))
     return render_template('mod_db/showperformers.html',
@@ -95,12 +98,14 @@ def deleteperformer(performerid):
     form = DeletePerformerForm()
     if form.validate_on_submit():
         delPerfFromAll(performerid)
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
+    perf = Performer.query.filter_by(id=performerid).first()
+    form.firstname.data = perf.firstname
+    form.name.data = perf.name
     foundMessage = 'delete Performer from DB and from all Shows?'
     return render_template('mod_db/deleteperformer.html',
                             title='Delete Performer',
                             form=form,
-                           perf=perf,
                             message=foundMessage)
 
 
@@ -171,6 +176,42 @@ def deleteperffromshow(showid,perfnr):
                            )
 
 
+@mod_db.route('/addshow', methods=['GET', 'POST'])
+def addshow():
+    form = AddShowForm()
+    if form.validate_on_submit():
+        try:
+            current_app.logger.info('add show')
+            # show = Show.query.filter_by(id=showid).first()
+            addShow(form)
+            # db.session.commit()
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
+        return redirect(url_for('main.index'))
+    return render_template('mod_db/addshow.html',
+                           title='Title',
+                           message='Add show',
+                           form=form
+                           )
+
+@mod_db.route('/deleteshow/<showid>', methods=['GET', 'POST'])
+def deleteshow(showid):
+    form = DeleteShowForm()
+    if form.validate_on_submit():
+        try:
+            current_app.logger.info('delete show')
+            deleteShow(showid)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
+        return redirect(url_for('main.index'))
+    fillTheShowForm(showid, form)
+    return render_template('mod_db/deleteshow.html',
+                           title='Title',
+                           message='Delete show',
+                           form=form
+                           )
 
 
 @mod_db.route('/showsresults/<searchitems>', methods=['GET', 'POST'])

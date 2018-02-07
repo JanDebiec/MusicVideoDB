@@ -22,6 +22,8 @@ class SearchDbForm(SingleShowForm):
 #
 #
 class AddShowForm(SingleShowForm):
+    addperformername = StringField('Add Performer Name')
+    addperformerfname = StringField('Add Performer First Name')
     submit = SubmitField('Add')
 
 class DeleteShowForm(SingleShowForm):
@@ -32,24 +34,13 @@ class EditShowForm(SingleShowForm):
     addperformerfname = StringField('Add Performer First Name')
     submit = SubmitField('Update')
 
-# class ExploreForm(FlaskForm):
-#     localname = StringField('TitleLocal')
-#     year = StringField('Year')
-#     director = StringField('Director')
-#
 class ShowsResultsForm(FlaskForm):
     submit = SubmitField('Update')
-
-# class CriticsListForm(FlaskForm):
-#     submit = SubmitField('Update')
-#
 
 class ShowsPerformersForm(FlaskForm):
     addperformername = StringField('Add Performer Name')
     addperformerfname = StringField('Add Performer First Name')
     submit = SubmitField('Update')
-
-
 
 class SinglePerformerForm(FlaskForm):
     firstname = StringField('First Name')

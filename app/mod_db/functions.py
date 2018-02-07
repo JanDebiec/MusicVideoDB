@@ -3,6 +3,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Show, Performer
+from app.mod_db.forms import SingleShowForm
 
 class ShowToDisplay:
     def __init__(self,
@@ -135,7 +136,7 @@ def delPerfFromAll(performerid):
 
     # remove perf from that shows
     for show in showsToEdit:
-        delPerfFromShow(show.id, performer, False)
+        show.delete_performer(performer)
 
     # at the end del the performer obj
     db.session.delete(performer)
@@ -219,14 +220,8 @@ def updateShow(showid, form):
 def delPerfFromShow(showid, perfnr, externFlag):
     show = Show.query.filter_by(id=showid).first()
     perf = Performer.query.filter_by(id=perfnr).first()
-    perfid = perf.id
-    perflist = show.performers
-    flagCommit = False
-    for perf in perflist:
-        if perf.id == perfid:
-            show.performers.remove(perf)
-            flagCommit = True
-    if externFlag and flagCommit:
+    show.delete_performer(perf)
+    if externFlag:
         db.session.commit()
 
 
@@ -240,3 +235,46 @@ def updatePlaceInDb(foundList, inputMedium):
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
+
+def addPerformer(form):
+    newPerf = Performer(name=form.addperformername.data,
+                        firstname=form.addperformerfname.data)
+    db.session.add(newPerf)
+    db.session.commit()
+
+def addShow(form):
+    location = form.location.data
+    title = form.title.data
+    year = form.year.data
+    medium = form.medium.data
+    place = form.place.data
+    source = form.source.data
+    notes = form.notes.data
+    newShow = Show(
+        location=location,
+        showdate=year,
+        title=title,
+        source=source,
+        medium=medium,
+        place=place,
+        notes=notes
+    )
+    db.session.add(newShow)
+    db.session.commit()
+
+def deleteShow(showid):
+    show = Show.query.filter_by(id=showid).first()
+    db.session.delete(show)
+    db.session.commit()
+
+def fillTheShowForm(showid, form):
+    # form = SingleShowForm()
+    show = Show.query.filter_by(id=showid).first()
+    form.location.data = show.location
+    form.year.data = show.showdate
+    form.title.data = show.title
+    form.medium.data = show.medium
+    form.place.data = show.place
+    form.source.data = show.source
+    form.notes.data = show.notes
+    # return form
