@@ -14,9 +14,14 @@
             <td>Edit</td>
             <td>Delete</td>
         </tr>
+        <tr>
+            <td>ID</td>
+            <td>Firstname</td>
+            <td>Name</td>
+        </tr>
         {% for perf in performers %}
         <tr>
-            <td></td>
+            <td>{{perf.id}}</td>
             <td>{{perf.firstname}}</td>
             <td>{{perf.name}}</td>
             <td><a href="{{ url_for('database.editperformer', performerid=perf.id) }}">edit</a></td>

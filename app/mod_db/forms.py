@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, TextAreaField
 
 from wtforms.validators import DataRequired
 
@@ -43,6 +43,7 @@ class ShowsPerformersForm(FlaskForm):
     submit = SubmitField('Update')
 
 class SinglePerformerForm(FlaskForm):
+    id = IntegerField('ID')
     firstname = StringField('First Name')
     name = StringField('Name')
 

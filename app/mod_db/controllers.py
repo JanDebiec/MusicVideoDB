@@ -86,6 +86,7 @@ def editperformer(performerid):
         db.session.commit()
         return redirect(url_for('main.index'))
     perf = Performer.query.filter_by(id=performerid).first()
+    form.id.data = perf.id
     form.firstname.data = perf.firstname
     form.name.data = perf.name
 
