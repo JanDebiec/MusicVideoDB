@@ -100,24 +100,60 @@ def searchInDb(searchitems):
         looking_for = '%{0}%'.format(itemplace)
         if queryStarted == False:
             # queryresult = Movie.query.filter_by(place=itemplace)
+            queryresult = Show.query.filter(Show.place.like(looking_for))
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Show.place.like(looking_for))
+
+    itemlocation = searchitems['location']
+    if itemlocation != '':
+        looking_for = '%{0}%'.format(itemlocation)
+        if queryStarted == False:
+            # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.location.like(looking_for))
             queryStarted = True
         else:
             queryresult = queryresult.filter(Show.location.like(looking_for))
+
+    itemtitle = searchitems['title']
+    if itemtitle != '':
+        looking_for = '%{0}%'.format(itemtitle)
+        if queryStarted == False:
+            # queryresult = Movie.query.filter_by(place=itemplace)
+            queryresult = Show.query.filter(Show.title.like(looking_for))
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Show.title.like(looking_for))
 
     if  queryStarted:
         found = queryresult.all()
 
     return found
 
-def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
+def filterShowsWithPerfName(listRawShows, itemperformer):
+    ''' function search for shows with performer
+    in the show.performers.list'''
     listWithPerf = []
-    for show in listShowsToDisplay:
-        perfName = show.performername
-        if itemperformer in perfName:
-            listWithPerf.append(show)
+    looking_for = '%{0}%'.format(itemperformer)
+    perfs = Performer.query.filter(Performer.name.like(looking_for)).all()
+
+    for perf in perfs:
+        for show in listRawShows:
+            if show.is_included(perf):
+                listWithPerf.append(show)
 
     return listWithPerf
+
+# old version
+# def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
+#     ''' function checks only the first performer'''
+#     listWithPerf = []
+#     for show in listShowsToDisplay:
+#         perfName = show.performername
+#         if itemperformer in perfName:
+#             listWithPerf.append(show)
+#
+#     return listWithPerf
 
 
 def delPerfFromAll(performerid):

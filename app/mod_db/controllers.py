@@ -25,6 +25,8 @@ def search():
     if form.validate_on_submit():
         searchdir['year'] = form.year.data
         searchdir['medium'] = form.medium.data
+        searchdir['title'] = form.title.data
+        searchdir['location'] = form.location.data
         searchdir['place'] = form.place.data
         searchdir['performer'] = form.performer.data
 
@@ -119,7 +121,7 @@ def edit(showid):
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
 
-        return redirect(url_for('database.search', message=foundMessage))
+        return redirect(url_for('database.edit', showid=showid, message=foundMessage))
 
     # display the single result
     show = Show.query.filter_by(id=showid).first()
@@ -218,31 +220,39 @@ def deleteshow(showid):
 def showsresults(searchitems):
     form = ShowsResultsForm()
     searchdir = json.loads(searchitems)
-    foundShowsList = searchInDb(searchdir)
+
+    # 1 first search for items != performers
+    foundRawShowsList = searchInDb(searchdir)
     
     # list = 0, if ony show found
     # list = None if search not run
 
     itemperformer = searchdir['performer']
-    if foundShowsList == None:
+    if foundRawShowsList == None:
         if itemperformer != '':
-            foundShowsList = getAllShows()
+            foundRawShowsList = getAllShows()
         else:
             resultCount = 0
     else:
-        resultCount = len(foundShowsList)
+        resultCount = len(foundRawShowsList)
 
+    # 2 if perf defined, search for performer
+    if itemperformer != '':
+        foundList = filterShowsWithPerfName(foundRawShowsList, itemperformer)
+    else:
+        foundList = foundRawShowsList
+
+    # 3 convert the shows to showsForDisplay
     listShowsToDisplay = []
-    if foundShowsList != None:
-        for show in foundShowsList:
+    if foundRawShowsList != None:
+        for show in foundList:
             showToDisplay = ShowToDisplay(show)
             listShowsToDisplay.append(showToDisplay)
 
-    if itemperformer != '':
-        foundList = filterShowsWithPerfName(listShowsToDisplay, itemperformer)
+    if foundList == None:
+        resultCount = 0
     else:
-        foundList = listShowsToDisplay
-    resultCount = len(foundList)
+        resultCount = len(foundList)
 
     if form.validate_on_submit():
         if request.method == 'POST':
@@ -291,6 +301,6 @@ def showsresults(searchitems):
                            form=form,
                            showscount=resultCount,
                            # ownerRatings = ownerRatings,
-                           shows=foundList
+                           shows=listShowsToDisplay
                            )
 
