@@ -6,7 +6,7 @@ from flask import current_app
 
 from app import db
 from app.mod_db.models import Performer, Show
-from app.mod_db.forms import DeleteShowForm, AddShowForm, DeletePerformerForm, EditPerformerForm, ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
+from app.mod_db.forms import AddPerformerForm, DeleteShowForm, AddShowForm, DeletePerformerForm, EditPerformerForm, ShowsPerformersForm, SearchPerformerForm, DeletePerformerFromShowForm, SearchDbForm, ShowsResultsForm, EditShowForm
 
 # import app.mod_imdb.controllers as tsv
 
@@ -59,6 +59,24 @@ def searchperformer():
                             form=form,
                             message=foundMessage)
 
+@mod_db.route('/addperformer', methods=['GET', 'POST'])
+def addperformer():
+    form = AddPerformerForm()
+    foundMessage = 'Add performer'
+    # init content of form
+    searchdir = {}
+    if form.validate_on_submit():
+        name = form.name.data
+        firstname = form.firstname.data
+        addPerfWIthNames(name=name, firstname=firstname)
+        return redirect(url_for('database.addperformer',form=form, message=foundMessage))
+
+    # show form with proper message
+    return render_template('mod_db/addperformer.html',
+                            title='Add Performer',
+                            form=form,
+                            message=foundMessage)
+
 
 @mod_db.route('/showperformers/<searchitems>', methods=['GET', 'POST'])
 def showperformers(searchitems):
@@ -106,6 +124,7 @@ def deleteperformer(performerid):
     perf = Performer.query.filter_by(id=performerid).first()
     form.firstname.data = perf.firstname
     form.name.data = perf.name
+    form.id.data = perf.id
     foundMessage = 'delete Performer from DB and from all Shows?'
     return render_template('mod_db/deleteperformer.html',
                             title='Delete Performer',

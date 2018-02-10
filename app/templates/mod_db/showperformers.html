@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 {% block app_content %}
-<h1>List of found performers:</h1>
 {% if message %}
-    {{ message }}
+<h1>{{ message }}</h1>
 {% endif %}
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <table>
         <tr>
-            <td>Performers:</td>
+            <td><h4>Performers:</h4></td>
             <td></td>
             <td></td>
-            <td>Edit</td>
-            <td>Delete</td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
-            <td>ID</td>
-            <td>Firstname</td>
-            <td>Name</td>
+            <td><h5>ID</h5></td>
+            <td><h5>Firstname</h5></td>
+            <td><h5>Name</h5></td>
+            <td><h5>Edit</h5></td>
+            <td><h5>Delete</h5></td>
         </tr>
         {% for perf in performers %}
         <tr>
@@ -35,7 +36,12 @@
             <td>...</td>
         </tr>
         <tr>
-            <td>Add performer:</td>
+            <td><h4>Add performer:</h4></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
             <td>First name</td>
             <td>Name</td>
         </tr>

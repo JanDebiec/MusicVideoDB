@@ -208,11 +208,11 @@ def updateShow(showid, form):
         commitFlag = True
         obj.title = newTitle
 
-    oldLength = obj.length
-    newLength = form.length.data
+    oldLength = obj.lengthinmin
+    newLength = form.lenght.data
     if newLength != oldLength:
         commitFlag = True
-        obj.length = newLength
+        obj.lengthinmin = newLength
 
     newlocation = form.location.data
     oldlocation = obj.location
@@ -287,6 +287,13 @@ def updatePlaceInDb(foundList, inputMedium):
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
+
+def addPerfWIthNames(name, firstname):
+    newPerf = Performer(name=name,
+                        firstname=firstname)
+    db.session.add(newPerf)
+    db.session.commit()
+
 
 def addPerformer(form):
     newPerf = Performer(name=form.addperformername.data,
