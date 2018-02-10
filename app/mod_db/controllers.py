@@ -19,7 +19,7 @@ mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 @mod_db.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchDbForm()
-    foundMessage = 'search'
+    foundMessage = 'Search shows'
     # init content of form
     searchdir = {}
     if form.validate_on_submit():
@@ -28,6 +28,7 @@ def search():
         searchdir['title'] = form.title.data
         searchdir['location'] = form.location.data
         searchdir['place'] = form.place.data
+        searchdir['number'] = form.number.data
         searchdir['performer'] = form.performer.data
 
         searchitems = json.dumps(searchdir)
@@ -42,7 +43,7 @@ def search():
 @mod_db.route('/searchperformer', methods=['GET', 'POST'])
 def searchperformer():
     form = SearchPerformerForm()
-    foundMessage = 'search'
+    foundMessage = 'Search performer'
     # init content of form
     searchdir = {}
     if form.validate_on_submit():
@@ -78,7 +79,7 @@ def showperformers(searchitems):
 @mod_db.route('/editperformer/<performerid>', methods=['GET', 'POST'])
 def editperformer(performerid):
     form = EditPerformerForm()
-    message = 'Edit Performer'
+    message = 'Edit performer'
     if form.validate_on_submit():
         perf = Performer.query.filter_by(id=performerid).first()
         perf.name = form.name.data
@@ -115,7 +116,7 @@ def deleteperformer(performerid):
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
 def edit(showid):
     form = EditShowForm()
-    foundMessage = 'edit'
+    foundMessage = 'Edit show'
     if form.validate_on_submit():
         try:
             updateShow(showid, form)
@@ -127,13 +128,7 @@ def edit(showid):
     # display the single result
     show = Show.query.filter_by(id=showid).first()
     #
-    form.location.data = show.location
-    form.title.data = show.title
-    form.year.data = show.showdate
-    form.medium.data = show.medium
-    form.place.data = show.place
-    form.source.data = show.source
-    form.notes.data = show.notes
+    fillTheShowForm(showid, form)
     try:
         performers = show.performer
     except:

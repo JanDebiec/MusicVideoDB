@@ -11,7 +11,9 @@ class SingleShowForm(FlaskForm):
     medium = StringField('Medium')
     place = StringField('Place')
     source = StringField('Source')
+    lenght = IntegerField('Length in min')
     notes = TextAreaField('Notes')
+    number = StringField('Number')
 
 class SearchDbForm(SingleShowForm):
     performer = StringField('Performer')

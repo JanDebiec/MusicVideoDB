@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 {% block app_content %}
-<h1>Search Input</h1>
 {% if message %}
-{{ message }}
+<h1>{{ message }}</h1>
 {% endif %}
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <table>
         <tr>
             <td>{{ form.title.label}}</td>
-            <td>{{ form.title(size=7)}}</td>
+            <td>{{ form.title(size=24)}}</td>
         </tr>
         <tr>
             <td>{{ form.location.label}}</td>
-            <td>{{ form.location(size=32)}}</td>
+            <td>{{ form.location(size=24)}}</td>
         </tr>
         <tr>
             <td>{{ form.year.label}}</td>
-            <td>{{ form.year(size=4)}}</td>
+            <td>{{ form.year(size=12)}}</td>
         </tr>
         <tr>
             <td>{{ form.performer.label}}</td>
             <td>{{ form.performer(size=16)}}</td>
         </tr>
         <tr>
-        <td></td><td>medium</td>
+        <td></td><td><h3>medium</h3></td>
         </tr>
         <tr>
             <td>{{ form.medium.label}}</td>
             <td>{{ form.medium(size=6)}}</td>
             <td>{{ form.place.label}}</td>
             <td>{{ form.place(size=6)}}</td>
+            <td>{{ form.number.label}}</td>
+            <td>{{ form.number(size=6)}}</td>
         </tr>
     </table>
         <p>

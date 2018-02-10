@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block app_content %}
 {% if message %}
-    {{ message }}
+<h1>{{ message }}</h1>
 {% endif %}
 <form action="" method="post">
     {{ form.hidden_tag() }}

@@ -1,37 +1,45 @@
 {% extends "base.html" %}
 {% block app_content %}
-<h1>Search Input</h1>
 {% if message %}
-    {{ message }}
+    <h1>{{ message }}</h1>
 {% endif %}
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <table>
         <tr>
             <td>{{ form.title.label}}</td>
-            <td>{{ form.title(size=32)}}</td>
+            <td>{{ form.title(size=24)}}</td>
         </tr>
         <tr>
             <td>{{ form.location.label}}</td>
-            <td>{{ form.location(size=32)}}</td>
+            <td>{{ form.location(size=24)}}</td>
         </tr>
         <tr>
             <td>{{ form.year.label}}</td>
             <td>{{ form.year(size=12)}}</td>
         </tr>
+
+        <tr>
+            <td>{{ form.lenght.label}}</td>
+            <td>{{ form.lenght(size=6)}}</td>
+        </tr>
         <tr>
             <td></td>
-            <td>medium</td>
+            <td><h3>medium</h3></td>
         </tr>
         <tr>
             <td>{{ form.medium.label}}</td>
-            <td>{{ form.medium(size=6)}}</td>
             <td>{{ form.place.label}}</td>
+            <td>{{ form.number.label}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.medium(size=6)}}</td>
             <td>{{ form.place(size=6)}}</td>
+            <td>{{ form.number(size=6)}}</td>
         </tr>
         <tr>
             <td></td>
-            <td>Performers:</td>
+            <td><h3>Performers:</h3></td>
             <td></td>
         </tr>
         <tr>
@@ -50,9 +58,9 @@
         <tr>
         </tr>
         <tr>
-            <td>Add performer:</td>
-            <td>First name</td>
-            <td>Name</td>
+            <td><h3>Add performer:</h3></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td></td>
@@ -67,7 +75,7 @@
 
     </table>
     <p>
-        {{ form.notes() }}
+        {{ form.notes(cols="48", rows="12") }}
     </p>
     <p>
         {{ form.submit() }}

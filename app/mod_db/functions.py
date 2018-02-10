@@ -125,6 +125,16 @@ def searchInDb(searchitems):
         else:
             queryresult = queryresult.filter(Show.title.like(looking_for))
 
+    itemnumber = searchitems['number']
+    if itemnumber != '':
+        looking_for = '%{0}%'.format(itemnumber)
+        if queryStarted == False:
+            # queryresult = Movie.query.filter_by(place=itemplace)
+            queryresult = Show.query.filter(Show.number.like(looking_for))
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Show.number.like(looking_for))
+
     if  queryStarted:
         found = queryresult.all()
 
@@ -197,6 +207,12 @@ def updateShow(showid, form):
     if newTitle != oldTitle:
         commitFlag = True
         obj.title = newTitle
+
+    oldLength = obj.length
+    newLength = form.length.data
+    if newLength != oldLength:
+        commitFlag = True
+        obj.length = newLength
 
     newlocation = form.location.data
     oldlocation = obj.location
@@ -312,5 +328,7 @@ def fillTheShowForm(showid, form):
     form.medium.data = show.medium
     form.place.data = show.place
     form.source.data = show.source
+    form.number.data = show.number
+    form.lenght.data = show.lengthinmin
     form.notes.data = show.notes
     # return form
