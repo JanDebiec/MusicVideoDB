@@ -288,18 +288,18 @@ def updatePlaceInDb(foundList, inputMedium):
         if newPlace != oldPlace:
             movie.place = newPlace
 
-def addPerfWIthNames(name, firstname):
+def add_performer(name, firstname):
     newPerf = Performer(name=name,
                         firstname=firstname)
     db.session.add(newPerf)
     db.session.commit()
 
 
-def addPerformer(form):
-    newPerf = Performer(name=form.addperformername.data,
-                        firstname=form.addperformerfname.data)
-    db.session.add(newPerf)
-    db.session.commit()
+# def addPerformerFromForm(form):
+#     name = form.addperformername.data
+#     firstname = form.addperformerfname.data
+#
+#     add_performer(name=name, firstname=firstname)
 
 def addShow(form):
     location = form.location.data

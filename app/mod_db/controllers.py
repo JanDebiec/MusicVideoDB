@@ -68,7 +68,7 @@ def addperformer():
     if form.validate_on_submit():
         name = form.name.data
         firstname = form.firstname.data
-        addPerfWIthNames(name=name, firstname=firstname)
+        add_performer(name=name, firstname=firstname)
         return redirect(url_for('database.addperformer',form=form, message=foundMessage))
 
     # show form with proper message
@@ -83,7 +83,12 @@ def showperformers(searchitems):
     form = ShowsPerformersForm()
     searchdir = json.loads(searchitems)
     if form.validate_on_submit():
-        addPerformer(form)
+        name = form.addperformername.data
+        firstname = form.addperformerfname.data
+
+        add_performer(name=name, firstname=firstname)
+
+        # addPerformerFromForm(form)
         return redirect(url_for('main.index'))
     foundList = searchPerformersInDb(searchdir)
     foundMessage = 'found {} performers'.format(len(foundList))
