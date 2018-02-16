@@ -6,9 +6,7 @@ from app.mod_db.models import Show, Performer
 from app.mod_db.forms import SingleShowForm
 
 class ShowToDisplay:
-    def __init__(self,
-                 show
-                 ):
+    def __init__(self, show):
         self.id = show.id
         self.title = show.title
         self.showdate = show.showdate
@@ -18,8 +16,8 @@ class ShowToDisplay:
         self.number = show.number
         self.lengthinmin = show.lengthinmin
         try:
+            # main performer for display
             performer = show.performer[0]
-            # mainperformer = Performer.query.filter_by(id=performer).first()
             self.performername = performer.name
             self.performerfirstname = performer.firstname
         except:
@@ -154,17 +152,6 @@ def filterShowsWithPerfName(listRawShows, itemperformer):
 
     return listWithPerf
 
-# old version
-# def filterShowsWithPerfName(listShowsToDisplay, itemperformer):
-#     ''' function checks only the first performer'''
-#     listWithPerf = []
-#     for show in listShowsToDisplay:
-#         perfName = show.performername
-#         if itemperformer in perfName:
-#             listWithPerf.append(show)
-#
-#     return listWithPerf
-
 
 def delPerfFromAll(performerid):
     performer = Performer.query.filter_by(id=performerid).first()
@@ -278,12 +265,16 @@ def delPerfFromShow(showid, perfnr, externFlag):
 
 
 def updateMediumInDb(foundList, inputMedium):
-    pass
+    for movie, newMedium in zip(foundList, inputMedium):
+        oldMedium = movie.medium
+        if newMedium != oldMedium:
+            movie.medium = newMedium
 
 def updatePlaceInDb(foundList, inputMedium):
-    for i in range(len(foundList)):
-        newPlace = inputMedium[i]
-        movie = foundList[i]
+    for movie, newPlace in zip(foundList, inputMedium):
+    # for i in range(len(foundList)):
+    #     newPlace = inputMedium[i]
+    #     movie = foundList[i]
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
@@ -293,13 +284,6 @@ def add_performer(name, firstname):
                         firstname=firstname)
     db.session.add(newPerf)
     db.session.commit()
-
-
-# def addPerformerFromForm(form):
-#     name = form.addperformername.data
-#     firstname = form.addperformerfname.data
-#
-#     add_performer(name=name, firstname=firstname)
 
 def addShow(form):
     location = form.location.data
@@ -327,7 +311,6 @@ def deleteShow(showid):
     db.session.commit()
 
 def fillTheShowForm(showid, form):
-    # form = SingleShowForm()
     show = Show.query.filter_by(id=showid).first()
     form.location.data = show.location
     form.year.data = show.showdate
@@ -338,4 +321,3 @@ def fillTheShowForm(showid, form):
     form.number.data = show.number
     form.lenght.data = show.lengthinmin
     form.notes.data = show.notes
-    # return form
