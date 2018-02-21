@@ -36,9 +36,10 @@ def search():
 
     # show form with proper message
     return render_template('mod_db/search.html',
-                            title='Search Show',
-                            form=form,
-                            message=foundMessage)
+                           title='Search Show',
+                           form=form,
+                           message=foundMessage)
+
 
 @mod_db.route('/searchperformer', methods=['GET', 'POST'])
 def searchperformer():
@@ -55,9 +56,10 @@ def searchperformer():
 
     # show form with proper message
     return render_template('mod_db/searchperformer.html',
-                            title='Search Performer',
-                            form=form,
-                            message=foundMessage)
+                           title='Search Performer',
+                           form=form,
+                           message=foundMessage)
+
 
 @mod_db.route('/addperformer', methods=['GET', 'POST'])
 def addperformer():
@@ -73,9 +75,9 @@ def addperformer():
 
     # show form with proper message
     return render_template('mod_db/addperformer.html',
-                            title='Add Performer',
-                            form=form,
-                            message=foundMessage)
+                           title='Add Performer',
+                           form=form,
+                           message=foundMessage)
 
 
 @mod_db.route('/showperformers/<searchitems>', methods=['GET', 'POST'])
@@ -85,18 +87,15 @@ def showperformers(searchitems):
     if form.validate_on_submit():
         name = form.addperformername.data
         firstname = form.addperformerfname.data
-
         add_performer(name=name, firstname=firstname)
-
-        # addPerformerFromForm(form)
         return redirect(url_for('main.index'))
     foundList = searchPerformersInDb(searchdir)
     foundMessage = 'found {} performers'.format(len(foundList))
     return render_template('mod_db/showperformers.html',
-                            title='List Performers',
-                            form=form,
+                           title='List Performers',
+                           form=form,
                            performers=foundList,
-                            message=foundMessage)
+                           message=foundMessage)
 
 
 @mod_db.route('/editperformer/<performerid>', methods=['GET', 'POST'])
@@ -115,10 +114,10 @@ def editperformer(performerid):
     form.name.data = perf.name
 
     return render_template('mod_db/editperformer.html',
-                            title='List Performers',
-                            form=form,
+                           title='List Performers',
+                           form=form,
                            perf=perf,
-                            message=message)
+                           message=message)
 
 @mod_db.route('/deleteperformer/<performerid>', methods=['GET', 'POST'])
 def deleteperformer(performerid):
@@ -132,9 +131,9 @@ def deleteperformer(performerid):
     form.id.data = perf.id
     foundMessage = 'delete Performer from DB and from all Shows?'
     return render_template('mod_db/deleteperformer.html',
-                            title='Delete Performer',
-                            form=form,
-                            message=foundMessage)
+                           title='Delete Performer',
+                           form=form,
+                           message=foundMessage)
 
 
 @mod_db.route('/edit/<showid>', methods=['GET', 'POST'])
@@ -158,14 +157,14 @@ def edit(showid):
     except:
         current_app.logger.error('performers not found', exc_info=sys.exc_info())
 
-
     # show form with proper message
     return render_template('mod_db/edit.html',
-                            title='Edit Show',
-                            form=form,
+                           title='Edit Show',
+                           form=form,
                            show=show,
                            performers=performers,
-                            message=foundMessage)
+                           message=foundMessage)
+
 
 @mod_db.route('/deleteperffromshow/<showid>/<perfnr>', methods=['GET', 'POST'])
 def deleteperffromshow(showid,perfnr):
@@ -216,6 +215,7 @@ def addshow():
                            message='Add show',
                            form=form
                            )
+
 
 @mod_db.route('/deleteshow/<showid>', methods=['GET', 'POST'])
 def deleteshow(showid):

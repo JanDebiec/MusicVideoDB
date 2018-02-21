@@ -5,6 +5,7 @@ from app import db
 from app.mod_db.models import Show, Performer
 from app.mod_db.forms import SingleShowForm
 
+
 class ShowToDisplay:
     def __init__(self, show):
         self.id = show.id
@@ -38,21 +39,17 @@ def searchPerformersInDb(searchitems):
         looking_for = '%{0}%'.format(itemname)
         if queryStarted == False:
             queryresult = Performer.query.filter(Performer.name.like(looking_for))
-            # queryresult = Show.query.filter_by(showdate=itemyear)
             queryStarted = True
         else:
             queryresult = queryresult.filter(Performer.name.like(looking_for))
-            # queryresult = queryresult.filter_by(showdate=itemyear)
     itemfname = searchitems['firstname']
     if itemfname != '':
         looking_for = '%{0}%'.format(itemfname)
         if queryStarted == False:
             queryresult = Performer.query.filter(Performer.firstname.like(looking_for))
-            # queryresult = Show.query.filter_by(showdate=itemyear)
             queryStarted = True
         else:
             queryresult = queryresult.filter(Performer.firstname.like(looking_for))
-            # queryresult = queryresult.filter_by(showdate=itemyear)
     if  queryStarted:
         found = queryresult.all()
 
@@ -66,20 +63,15 @@ def searchInDb(searchitems):
     queryStarted = False
     found = None
     queryresult = None
-    # only equal reults, DVD and excluded DVDR
+    # only equal reults, DVD and excluded DVDR, that's why not using like(looking_for)
     itemmedium = searchitems['medium']
     if itemmedium != '':
         looking_for = '%{0}%'.format(itemmedium)
         if queryStarted == False:
-            # for testing:
-            # queryresult = Show.query.filter(Show.medium.like(looking_for))
             queryresult = Show.query.filter_by(medium=itemmedium)
-            # queryresult = Show.query.filter_by(medium=itemmedium).order_by(Show.year.desc())
             queryStarted = True
         else:
-            # queryresult = queryresult.filter(Show.medium.like(looking_for))
             queryresult = queryresult.filter_by(medium=itemmedium)
-            # queryresult = queryresult.filter_by(medium=itemmedium).order_by(Movie.year.desc())
 
 
     itemyear = searchitems['year']
@@ -87,17 +79,14 @@ def searchInDb(searchitems):
         looking_for = '%{0}%'.format(itemyear)
         if queryStarted == False:
             queryresult = Show.query.filter(Show.showdate.like(looking_for))
-            # queryresult = Show.query.filter_by(showdate=itemyear)
             queryStarted = True
         else:
             queryresult = queryresult.filter(Show.showdate.like(looking_for))
-            # queryresult = queryresult.filter_by(showdate=itemyear)
 
     itemplace = searchitems['place']
     if itemplace != '':
         looking_for = '%{0}%'.format(itemplace)
         if queryStarted == False:
-            # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.place.like(looking_for))
             queryStarted = True
         else:
@@ -107,7 +96,6 @@ def searchInDb(searchitems):
     if itemlocation != '':
         looking_for = '%{0}%'.format(itemlocation)
         if queryStarted == False:
-            # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.location.like(looking_for))
             queryStarted = True
         else:
@@ -117,7 +105,6 @@ def searchInDb(searchitems):
     if itemtitle != '':
         looking_for = '%{0}%'.format(itemtitle)
         if queryStarted == False:
-            # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.title.like(looking_for))
             queryStarted = True
         else:
@@ -127,7 +114,6 @@ def searchInDb(searchitems):
     if itemnumber != '':
         looking_for = '%{0}%'.format(itemnumber)
         if queryStarted == False:
-            # queryresult = Movie.query.filter_by(place=itemplace)
             queryresult = Show.query.filter(Show.number.like(looking_for))
             queryStarted = True
         else:
@@ -143,6 +129,8 @@ def filterShowsWithPerfName(listRawShows, itemperformer):
     in the show.performers.list'''
     listWithPerf = []
     looking_for = '%{0}%'.format(itemperformer)
+
+    # create the list of performers, can be bigger as one
     perfs = Performer.query.filter(Performer.name.like(looking_for)).all()
 
     for perf in perfs:
@@ -166,7 +154,6 @@ def delPerfFromAll(performerid):
             if perf.id == perfid:
                 showsToEdit.append(show)
 
-
     # remove perf from that shows
     for show in showsToEdit:
         show.delete_performer(performer)
@@ -175,14 +162,6 @@ def delPerfFromAll(performerid):
     db.session.delete(performer)
     db.session.commit()
 
-
-
-
-# def deleteMovie(movieid):
-#     obj = Movie.query.filter_by(id=movieid).first()
-#     print(obj)
-#     db.session.delete(obj)
-#     db.session.commit()
 
 def updateShow(showid, form):
     commitFlag = False
@@ -272,9 +251,6 @@ def updateMediumInDb(foundList, inputMedium):
 
 def updatePlaceInDb(foundList, inputMedium):
     for movie, newPlace in zip(foundList, inputMedium):
-    # for i in range(len(foundList)):
-    #     newPlace = inputMedium[i]
-    #     movie = foundList[i]
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
@@ -285,6 +261,7 @@ def add_performer(name, firstname):
     db.session.add(newPerf)
     db.session.commit()
 
+
 def addShow(form):
     location = form.location.data
     title = form.title.data
@@ -293,22 +270,26 @@ def addShow(form):
     place = form.place.data
     source = form.source.data
     notes = form.notes.data
+    lenght = form.lenght.data
     newShow = Show(
         location=location,
         showdate=year,
         title=title,
         source=source,
         medium=medium,
+        lengthinmin=lenght,
         place=place,
         notes=notes
     )
     db.session.add(newShow)
     db.session.commit()
 
+
 def deleteShow(showid):
     show = Show.query.filter_by(id=showid).first()
     db.session.delete(show)
     db.session.commit()
+
 
 def fillTheShowForm(showid, form):
     show = Show.query.filter_by(id=showid).first()
