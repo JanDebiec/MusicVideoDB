@@ -204,6 +204,12 @@ def updateShow(showid, form):
         commitFlag = True
         obj.place = newplace
 
+    newNumber = form.number.data
+    oldNumber = obj.number
+    if newNumber != oldNumber:
+        commitFlag = True
+        obj.number = newNumber
+
     newnotes = form.notes.data
     oldnotes = obj.notes
     if newnotes != oldnotes:
@@ -277,6 +283,7 @@ def addShow(form):
     place = form.place.data
     source = form.source.data
     notes = form.notes.data
+    number = form.number.data
     lenght = form.lenght.data
     newShow = Show(
         location=location,
@@ -284,6 +291,7 @@ def addShow(form):
         title=title,
         source=source,
         medium=medium,
+        number=number,
         lengthinmin=lenght,
         place=place,
         notes=notes
