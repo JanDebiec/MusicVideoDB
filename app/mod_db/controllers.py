@@ -305,8 +305,19 @@ def showsresults(searchitems):
                 except: # no more medium input
                     break
 
-            # updateMediumInDb(foundMovieList, inputMedium)
-            # updatePlaceInDb(foundMovieList, inputPlace)
+            inputLength = []
+            for i in range(resultCount):
+                try:
+                    pointerString = 'length[{}]'.format(i)
+                    lng = newdict[pointerString]
+                    if lng != '' and lng != '-' and lng != '0':
+                        flagDbShouldCommit = True
+                    inputLength.append(lng)
+                except: # no more medium input
+                    break
+            updateMediumInDb(foundList, inputMedium)
+            updatePlaceInDb(foundList, inputPlace)
+            updateLengthInDb(foundList, inputLength)
             if flagDbShouldCommit:
                 db.session.commit()
 

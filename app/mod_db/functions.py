@@ -244,16 +244,23 @@ def delPerfFromShow(showid, perfnr, externFlag):
 
 
 def updateMediumInDb(foundList, inputMedium):
-    for movie, newMedium in zip(foundList, inputMedium):
-        oldMedium = movie.medium
+    for show, newMedium in zip(foundList, inputMedium):
+        oldMedium = show.medium
         if newMedium != oldMedium:
-            movie.medium = newMedium
+            show.medium = newMedium
 
-def updatePlaceInDb(foundList, inputMedium):
-    for movie, newPlace in zip(foundList, inputMedium):
-        oldPlace = movie.place
+def updatePlaceInDb(foundList, inputPlace):
+    for show, newPlace in zip(foundList, inputPlace):
+        oldPlace = show.place
         if newPlace != oldPlace:
-            movie.place = newPlace
+            show.place = newPlace
+
+def updateLengthInDb(foundList, inputLength):
+    for show, newLength in zip(foundList, inputLength):
+        oldLength = str(show.lengthinmin)
+        if newLength != oldLength:
+            show.lengthinmin = newLength
+
 
 def add_performer(name, firstname):
     newPerf = Performer(name=name,
