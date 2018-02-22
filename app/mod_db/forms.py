@@ -24,8 +24,8 @@ class SearchDbForm(SingleShowForm):
 #
 #
 class AddShowForm(SingleShowForm):
-    addperformername = StringField('Add Performer Name')
-    addperformerfname = StringField('Add Performer First Name')
+    addperformername = StringField('Name')
+    addperformerfname = StringField('First Name')
     submit = SubmitField('Add')
 
 class DeleteShowForm(SingleShowForm):

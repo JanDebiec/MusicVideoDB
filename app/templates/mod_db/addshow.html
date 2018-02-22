@@ -28,14 +28,18 @@
         </tr>
         <tr>
             <td>{{ form.medium.label}}</td>
-            <td>{{ form.medium(size=6)}}</td>
             <td>{{ form.place.label}}</td>
-            <td>{{ form.place(size=6)}}</td>
+            <td>{{ form.number.label}}</td>
         </tr>
         <tr>
-            <td><h4>Add performer:</h4></td>
-            <td>First name</td>
-            <td>Name</td>
+            <td>{{ form.medium(size=6)}}</td>
+            <td>{{ form.place(size=6)}}</td>
+            <td>{{ form.number(size=6)}}</td>
+        </tr>
+        <tr>
+            <td><h3>Add performer:</h3></td>
+            <td>{{form.addperformerfname.label}}</td>
+            <td>{{form.addperformername.label}}</td>
         </tr>
         <tr>
             <td></td>
