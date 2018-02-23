@@ -21,6 +21,10 @@
         <tr>
             <td>{{ form.lenght.label}}</td>
             <td>{{ form.lenght(size=6)}}</td>
+            <td>{% for error in form.lenght.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            </td>
         </tr>
         <tr>
             <td></td>
