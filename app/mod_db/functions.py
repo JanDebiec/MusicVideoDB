@@ -139,6 +139,8 @@ def filterShowsWithPerfName(listRawShows, itemperformer):
                 dictWithPerf[show.id] = show
 
     listWithPerf = list(dictWithPerf.values())
+    # the same results with list compr
+    # nlist = [value for key, value in dictWithPerf.items()]
     return listWithPerf
 
 
