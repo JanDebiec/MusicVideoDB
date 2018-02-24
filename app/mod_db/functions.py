@@ -127,7 +127,7 @@ def searchInDb(searchitems):
 def filterShowsWithPerfName(listRawShows, itemperformer):
     ''' function search for shows with performer
     in the show.performers.list'''
-    listWithPerf = []
+    dictWithPerf = {}
     looking_for = '%{0}%'.format(itemperformer)
 
     # create the list of performers, can be bigger as one
@@ -136,8 +136,9 @@ def filterShowsWithPerfName(listRawShows, itemperformer):
     for perf in perfs:
         for show in listRawShows:
             if show.is_included(perf):
-                listWithPerf.append(show)
+                dictWithPerf[show.id] = show
 
+    listWithPerf = list(dictWithPerf.values())
     return listWithPerf
 
 
