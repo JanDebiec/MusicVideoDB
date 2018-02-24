@@ -127,6 +127,8 @@ def searchInDb(searchitems):
 def filterShowsWithPerfName(listRawShows, itemperformer):
     ''' function search for shows with performer
     in the show.performers.list'''
+    # dictionary disables the double insert of the same show for various perfs,
+    # for instance for Jarrett Trio and K.Jarrett as performers
     dictWithPerf = {}
     looking_for = '%{0}%'.format(itemperformer)
 
