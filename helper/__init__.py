@@ -1,7 +1,9 @@
 import io
 import csv
+import time
 
 from sqlalchemy import create_engine, Column, String, Integer, MetaData, Table
+
 
 class ManagedFile:
     def __init__(self, name, mode = 'r'):
@@ -16,6 +18,7 @@ class ManagedFile:
         if self._file:
             self._file.close()
 
+
 class ManagedUtfFile:
     def __init__(self, name, mode = 'r', encoding='UTF-8'):
         self._name = name
@@ -29,6 +32,7 @@ class ManagedUtfFile:
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._file:
             self._file.close()
+
 
 class inputCsvReader:
     def __init__(self, file):
@@ -64,3 +68,15 @@ class inputCsvReader:
 #             table.insert().values(**row).execute()
 #     return table
 
+
+def clock(func):
+    def clocked(*args):
+        t0 = time.perf_counter()
+        result = func(*args)
+        elapsed = time.perf_counter() - t0
+        name = func.__name__
+        arg_str = ', '.join(repr(arg) for arg in args)
+        print('[%0.6fs] %s' % (elapsed, name))
+        # print('[%0.8fs] %s(%s) -> %r' % (elapsed, name, arg_str, result))
+        return result
+    return clocked

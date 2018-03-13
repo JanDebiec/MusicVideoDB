@@ -4,6 +4,7 @@ from flask import current_app
 from app import db
 from app.mod_db.models import Show, Performer
 from app.mod_db.forms import SingleShowForm
+from  helper import clock # decorator clock
 
 
 class ShowToDisplay:
@@ -25,10 +26,12 @@ class ShowToDisplay:
             self.performername = ''
             self.performerfirstname = ''
 
+@clock
 def getAllShows():
     list = Show.query.all()
     return list
 
+@clock
 def searchPerformersInDb(searchitems):
     queryStarted = False
     found = None
@@ -56,6 +59,7 @@ def searchPerformersInDb(searchitems):
     return found
 
 
+@clock
 def searchInDb(searchitems):
     ''' extract items from searchitems,
     search for all movies, that fulfils the criteria
@@ -124,6 +128,7 @@ def searchInDb(searchitems):
 
     return found
 
+@clock
 def filterShowsWithPerfName(listRawShows, itemperformer):
     ''' function search for shows with performer
     in the show.performers.list'''
@@ -145,6 +150,24 @@ def filterShowsWithPerfName(listRawShows, itemperformer):
     # nlist = [value for key, value in dictWithPerf.items()]
     return listWithPerf
 
+@clock
+def searchShowsWithPerformers(perfToSearch):
+
+    looking_for = '%{0}%'.format(perfToSearch)
+
+    # create the list of performers, can be bigger as one
+    perfs = Performer.query.filter(Performer.name.like(looking_for)).all()
+
+    dictWithPerf = {}
+
+    for perf in perfs:
+        shows = perf.shows.all()
+        for show in shows:
+            #show = Show.query.filter_by(id = showid)
+            dictWithPerf[show.id] = show
+
+    listWithPerf = list(dictWithPerf.values())
+    return listWithPerf
 
 def delPerfFromAll(performerid):
     performer = Performer.query.filter_by(id=performerid).first()
@@ -168,6 +191,7 @@ def delPerfFromAll(performerid):
     db.session.commit()
 
 
+@clock
 def updateShow(showid, form):
     commitFlag = False
 
@@ -302,6 +326,7 @@ def addShow(form):
         notes=notes
     )
     db.session.add(newShow)
+    #TODO check and add/update performer
     db.session.commit()
 
 

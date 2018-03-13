@@ -244,30 +244,24 @@ def showsresults(searchitems):
     # 1 first search for items != performers
     foundRawShowsList = searchInDb(searchdir)
     
-    # list = 0, if ony show found
+    # list = 0, if only one show found
     # list = None if search not run
 
     itemperformer = searchdir['performer']
-    if foundRawShowsList == None:
+    if foundRawShowsList == None: # search only shows based on performer(s)
+        # search the shows of performer(s)
+        foundList = searchShowsWithPerformers(itemperformer)
+    else:
         if itemperformer != '':
-            foundRawShowsList = getAllShows()
+            foundList = filterShowsWithPerfName(foundRawShowsList, itemperformer)
         else:
-            resultCount = 0
-    else:
-        resultCount = len(foundRawShowsList)
-
-    # 2 if perf defined, search for performer
-    if itemperformer != '':
-        foundList = filterShowsWithPerfName(foundRawShowsList, itemperformer)
-    else:
-        foundList = foundRawShowsList
+            foundList = foundRawShowsList
 
     # 3 convert the shows to showsForDisplay
     listShowsToDisplay = []
-    if foundRawShowsList != None:
-        for show in foundList:
-            showToDisplay = ShowToDisplay(show)
-            listShowsToDisplay.append(showToDisplay)
+    for show in foundList:
+        showToDisplay = ShowToDisplay(show)
+        listShowsToDisplay.append(showToDisplay)
 
     if foundList == None:
         resultCount = 0
