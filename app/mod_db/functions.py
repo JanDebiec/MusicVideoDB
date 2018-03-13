@@ -326,8 +326,18 @@ def addShow(form):
         place=place,
         notes=notes
     )
-    db.session.add(newShow)
     #TODO check and add/update performer
+    # check if new performer added
+    newName = form.addperformername.data
+    if newName != '':
+        newFName = form.addperformerfname.data
+        # check if performer already exists
+        perf = Performer.query.filter_by(name=newName).filter_by(firstname=newFName).first()
+        if perf == None:
+            perf = Performer(name=newName, firstname=newFName)
+        newShow.performers.append(perf)
+    db.session.add(newShow)
+
     db.session.commit()
 
 
