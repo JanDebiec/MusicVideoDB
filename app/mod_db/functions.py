@@ -17,6 +17,7 @@ class ShowToDisplay:
         self.location = show.location
         self.number = show.number
         self.lengthinmin = show.lengthinmin
+        self.place = show.place
         try:
             # main performer for display
             performer = show.performer[0]
