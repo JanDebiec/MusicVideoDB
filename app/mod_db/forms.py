@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired
 
 
 class SingleShowForm(FlaskForm):
+    id = StringField('Id')
     location = StringField('Location')
     title = StringField('Title')
     year = StringField('Year')

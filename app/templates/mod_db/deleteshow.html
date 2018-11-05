@@ -8,6 +8,10 @@
     {{ form.hidden_tag() }}
     <table>
         <tr>
+            <td>{{ form.id.label}}</td>
+            <td>{{ form.id(size=6)}}</td>
+        </tr>
+        <tr>
             <td>{{ form.title.label}}</td>
             <td>{{ form.title(size=32)}}</td>
         </tr>

@@ -350,6 +350,7 @@ def deleteShow(showid):
 def fillTheShowForm(showid, form):
     show = Show.query.filter_by(id=showid).first()
     form.location.data = show.location
+    form.id.data = show.id
     form.year.data = show.showdate
     form.title.data = show.title
     form.medium.data = show.medium

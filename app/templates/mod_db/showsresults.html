@@ -11,6 +11,7 @@
             {% for show in shows %}
             <!--without subframe, to enable loop variable-->
             <tr valign="top">
+                <td>{{ show.id }}</td>
                 <td>{{ show.performerfirstname }}</td>
                 <td>{{ show.performername }}</td>
                 <td>{{ show.title }}, {{ show.location }}</td>
